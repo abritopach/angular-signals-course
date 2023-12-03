@@ -92,6 +92,13 @@
     margin-top: 1.5rem;
   }
 
+  .counter-buttons {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
 </style>
 
 <main class="main">
@@ -145,6 +152,14 @@
       <h1>Hello, {{ title }}</h1>
       <h2>1. Writable signals lesson</h2>
       <p>Writable signal value: {{ value() }}</p>
+
+      <p>Value: {{ counter() }}</p>
+
+      <div class="counter-buttons">
+        <button (click)="reset()">reset</button>
+        <button (click)="add()">add 1</button>
+        <button (click)="multiply()">multiply by 2</button>
+      </div>
     </div>
   </div>
 </main>
