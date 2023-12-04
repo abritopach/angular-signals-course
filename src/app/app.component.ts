@@ -2,6 +2,16 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
+export enum TaskState {
+  New,
+  Done,
+}
+
+export interface Task {
+  title: string;
+  state: TaskState;
+}
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -11,30 +21,29 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'angular-signals-course';
-  value = signal(15);
-  counter = signal(0);
 
-  constructor(){
-    setTimeout(() => {
-      // Replacing the initial value of 15 with 30 after 1000ms.
-        this.value.set(30);
-    }, 1000);
+  tasks = signal<Task[]>([{
+    title: 'Learn more about the signals',
+    state: TaskState.New
+  }]);
 
-    setInterval(() => {
-      // Increment the value by one, every 1000ms.
-      this.value.update(v => v + 1);
-    }, 2000);
+  readonly TaskState = TaskState;
+
+  createNewTask() {
+    const newTask: Task = {
+      title: 'Learn more about the signals',
+      state: TaskState.New,
+    };
+    this.tasks.update((tasks) => {
+      tasks.push(newTask);
+      return tasks;
+    });
   }
 
-  reset() {
-    this.counter.set(0);
-  }
-
-  add() {
-    this.counter.update(c => c + 1);
-  }
-
-  multiply() {
-    this.counter.update(c => c * 2);
+  markAsDone(index: number) {
+    this.tasks.update(tasks => {
+      tasks[index].state = TaskState.Done;
+      return tasks;
+    });
   }
 }
