@@ -92,11 +92,56 @@
     margin-top: 1.5rem;
   }
 
-  .counter-buttons {
-    width: 200px;
+  section {
+    padding: 10px;
+    min-height: 200px;
+    border-radius: 10px;
+    gap: 8px;
+  }
+
+  section, section > article {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+  }
+
+  section.new {
+    background-color: #FFEB3B;
+  }
+
+  section.new button {
+    background-color: #01d675;
+  }
+
+  article > button {
+    margin-top: 16px;
+    color: #28262a;
+  }
+
+  article {
+    border: 3px solid #28262a;
+    background-color: #28262a;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 0.2);
+    text-align: center;
+    min-width: 180px;
+  }
+
+  article > p {
+    color: rgb(255, 255, 255);
+  }
+
+  section.done {
+    background-color: #01d675;
+  }
+
+  button {
+    width: fit-content;
+    margin: 0 auto;
+    align-items: center;
+    background-color: rgb(63, 81, 181);
+    color: rgb(255, 255, 255);
   }
 
 </style>
@@ -151,15 +196,30 @@
       </svg>
       <h1>Hello, {{ title }}</h1>
       <h2>1. Writable signals lesson</h2>
-      <p>Writable signal value: {{ value() }}</p>
+      <h3>Todo List</h3>
 
-      <p>Value: {{ counter() }}</p>
+        <section class="new">
+          @for (task of tasks(); track task; let i = $index) {
+            @if (task.state === TaskState.New) {
+              <article class="todo-item">
+                <p> {{ task.title }} </p>
+                <button (click)="markAsDone(i)">Mark as Done</button>
+              </article>
+            }
+          }
+        </section>
 
-      <div class="counter-buttons">
-        <button (click)="reset()">reset</button>
-        <button (click)="add()">add 1</button>
-        <button (click)="multiply()">multiply by 2</button>
-      </div>
+        <section class="done">
+          @for (task of tasks(); track task) {
+            @if (task.state === TaskState.Done) {
+              <article class="todo-item">
+                <p>{{ task.title }}</p>
+              </article>
+            }
+          }
+        </section>
+
+      <button (click)="createNewTask()">Create a new Task</button>
     </div>
   </div>
 </main>
