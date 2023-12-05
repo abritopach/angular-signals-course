@@ -1,7 +1,9 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, EffectRef, Injector, computed, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { v4 as uuid } from 'uuid';
+import { LoggerService } from './services/logger.service';
+import { LoggerComponent } from './components/logger/logger.component';
 
 export enum TaskState {
   New,
@@ -30,7 +32,7 @@ const INITIAL_TASKS: Task[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, LoggerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -50,6 +52,11 @@ export class AppComponent {
   isPrime = computed<boolean>(() => this.isNumberPrime(this.value()));
   whenClickedAddOneNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click add 1 button the number ${this.value() + 1} it will be prime.` : '');
   whenClickedMultiplyTwoNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click multiply 2 button the number ${this.value() + 1} it will be prime.` : '');
+
+  myEffect: EffectRef | null = null;
+
+  constructor(private logger: LoggerService, private injector: Injector) {}
+
 
   createNewTask() {
     const NEW_TASK: Task = {
@@ -71,6 +78,24 @@ export class AppComponent {
         }
       })
     });
+  }
+
+  startLogging() {
+    // this.myEffect = effect(() => this.logger.log(this.value()), { injector: this.injector });
+
+    this.myEffect = effect((onCleanup) => {
+      const value = this.value();
+      const task = setTimeout(() => {
+        this.logger.log(value);
+      }, 500);
+      onCleanup(() => {
+        clearTimeout(task);
+      });
+    }, { injector: this.injector });
+  }
+
+  stopLogging() {
+    this.myEffect?.destroy();
   }
 
   reset() {

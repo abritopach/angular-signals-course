@@ -198,24 +198,24 @@
       <h2>2. Computed signals lesson</h2>
       <h3>Todo List</h3>
 
-        <section class="new">
-          @for (task of tasksNew(); track task._id; let i = $index) {
-            <article class="todo-item">
-              <p> {{ task.title }} </p>
-              <button (click)="markAsDone(task)">Mark as Done</button>
-            </article>
-          }
-          <p>{{ tasksNew().length }}</p>
-        </section>
+      <section class="new">
+        @for (task of tasksNew(); track task._id; let i = $index) {
+          <article class="todo-item">
+            <p> {{ task.title }} </p>
+            <button (click)="markAsDone(task)">Mark as Done</button>
+          </article>
+        }
+        <p>{{ tasksNew().length }}</p>
+      </section>
 
-        <section class="done">
-          @for (task of tasksDone(); track task) {
-            <article class="todo-item">
-              <p>{{ task.title }}</p>
-            </article>
-          }
-          <p>{{ tasksDone().length }}</p>
-        </section>
+      <section class="done">
+        @for (task of tasksDone(); track task) {
+          <article class="todo-item">
+            <p>{{ task.title }}</p>
+          </article>
+        }
+        <p>{{ tasksDone().length }}</p>
+      </section>
 
       <button (click)="createNewTask()">Create a new Task</button>
 
@@ -236,7 +236,14 @@
           <button (click)="multiply()">multiply by 2</button>
           <span> {{ whenClickedMultiplyTwoNumberIsPrime() }}</span>
         </div>
+        <div>
+          <button (click)="startLogging()">Start Logging</button>
+        </div>
+        <div>
+          <button (click)="stopLogging()">Stop Logging</button>
+        </div>
       </div>
+      <app-logger></app-logger>
     </div>
   </div>
 </main>
