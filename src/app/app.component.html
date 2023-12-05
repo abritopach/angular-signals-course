@@ -195,33 +195,30 @@
         </defs>
       </svg>
       <h1>Hello, {{ title }}</h1>
-      <h2>1. Writable signals lesson</h2>
+      <h2>2. Computed signals lesson</h2>
       <h3>Todo List</h3>
 
         <section class="new">
-          @for (task of tasks(); track task; let i = $index) {
-            @if (task.state === TaskState.New) {
-              <article class="todo-item">
-                <p> {{ task.title }} </p>
-                <button (click)="markAsDone(i)">Mark as Done</button>
-              </article>
-            }
+          @for (task of tasksNew(); track task._id; let i = $index) {
+            <article class="todo-item">
+              <p> {{ task.title }} </p>
+              <button (click)="markAsDone(task)">Mark as Done</button>
+            </article>
           }
+          <p>{{ tasksNew().length }}</p>
         </section>
 
         <section class="done">
-          @for (task of tasks(); track task) {
-            @if (task.state === TaskState.Done) {
-              <article class="todo-item">
-                <p>{{ task.title }}</p>
-              </article>
-            }
+          @for (task of tasksDone(); track task) {
+            <article class="todo-item">
+              <p>{{ task.title }}</p>
+            </article>
           }
+          <p>{{ tasksDone().length }}</p>
         </section>
 
       <button (click)="createNewTask()">Create a new Task</button>
 
-      <h2>2. Computed signals lesson</h2>
       <h3>Counter</h3>
 
       <p>Value: {{ value() }}</p>
