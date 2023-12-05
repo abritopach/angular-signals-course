@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
@@ -29,6 +29,11 @@ export class AppComponent {
 
   readonly TaskState = TaskState;
 
+  value = signal<number>(0);
+  isPrime = computed<boolean>(() => this.isNumberPrime(this.value()));
+  whenClickedAddOneNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click add 1 button the number ${this.value() + 1} it will be prime.` : '');
+  whenClickedMultiplyTwoNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click multiply 2 button the number ${this.value() + 1} it will be prime.` : '');
+
   createNewTask() {
     const newTask: Task = {
       title: 'Learn more about the signals',
@@ -45,5 +50,24 @@ export class AppComponent {
       tasks[index].state = TaskState.Done;
       return tasks;
     });
+  }
+
+  reset() {
+    this.value.set(0);
+  }
+
+  add() {
+    this.value.update((currentValue) => currentValue + 1);
+  }
+
+  multiply() {
+    this.value.update((currentValue) => currentValue * 2);
+  }
+
+  isNumberPrime(num: number): boolean {
+    for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
+      if (num % i === 0) return false;
+    }
+    return num > 1;
   }
 }
