@@ -220,6 +220,26 @@
         </section>
 
       <button (click)="createNewTask()">Create a new Task</button>
+
+      <h2>2. Computed signals lesson</h2>
+      <h3>Counter</h3>
+
+      <p>Value: {{ value() }}</p>
+      <p> {{ isPrime() }} </p>
+
+      <div>
+        <div>
+          <button (click)="reset()">reset</button>
+        </div>
+        <div>
+          <button (click)="add()">add 1</button>
+          <span> {{ whenClickedAddOneNumberIsPrime() }}</span>
+        </div>
+        <div>
+          <button (click)="multiply()">multiply by 2</button>
+          <span> {{ whenClickedMultiplyTwoNumberIsPrime() }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </main>
