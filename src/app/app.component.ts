@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { v4 as uuid } from 'uuid';
 import { LoggerService } from './services/logger.service';
 import { LoggerComponent } from './components/logger/logger.component';
+import { ApiService } from './services/api.service';
 
 export enum TaskState {
   New,
@@ -39,13 +40,17 @@ const INITIAL_TASKS: Task[] = [
 export class AppComponent {
   title = 'angular-signals-course';
 
+  // To-do List
   tasks = signal<Task[]>(INITIAL_TASKS);
 
   readonly TaskState = TaskState;
 
-  // To-do List
   tasksDone = computed<Task[]>(() => this.tasks().filter(task => task.state === TaskState.Done));
   tasksNew = computed<Task[]>(() => this.tasks().filter(task => task.state === TaskState.New));
+  totalTasksDone = computed(() => this.tasksDone().length);
+
+  doneOperations = signal<number>(0);
+  statsEffect?: EffectRef;
 
   // Counter
   value = signal<number>(0);
@@ -53,9 +58,9 @@ export class AppComponent {
   whenClickedAddOneNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click add 1 button the number ${this.value() + 1} it will be prime.` : '');
   whenClickedMultiplyTwoNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click multiply 2 button the number ${this.value() + 1} it will be prime.` : '');
 
-  myEffect: EffectRef | null = null;
+  myEffect?: EffectRef;
 
-  constructor(private logger: LoggerService, private injector: Injector) {}
+  constructor(private logger: LoggerService, private injector: Injector, private apiService: ApiService) {}
 
 
   createNewTask() {
@@ -80,8 +85,23 @@ export class AppComponent {
     });
   }
 
+  statsOn() {
+    this.statsEffect = effect(() => {
+      this.totalTasksDone();
+      const doneOperations = this.apiService.markedAsDone();
+      console.log('done', doneOperations);
+      this.doneOperations.set(doneOperations);
+    }, {
+      injector: this.injector,
+      allowSignalWrites: true
+    });
+  }
+
+  statsOff() {
+    this.statsEffect?.destroy();
+  }
+
   startLogging() {
-    // this.myEffect = effect(() => this.logger.log(this.value()), { injector: this.injector });
 
     this.myEffect = effect((onCleanup) => {
       const value = this.value();
