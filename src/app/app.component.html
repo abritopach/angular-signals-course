@@ -219,6 +219,15 @@
 
       <button (click)="createNewTask()">Create a new Task</button>
 
+      <div class="stats">
+        <p>
+          Stats:
+          <button (click)="statsOn()">Start</button>
+          <button (click)="statsOff()">Stop</button>
+        </p>
+        <p> - Tasks marked as done: {{ doneOperations() }} </p>
+      </div>
+
       <h3>Counter</h3>
 
       <p>Value: {{ value() }}</p>
