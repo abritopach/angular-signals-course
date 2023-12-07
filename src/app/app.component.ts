@@ -1,4 +1,4 @@
-import { Component, EffectRef, Injector, computed, effect, signal } from '@angular/core';
+import { Component, EffectRef, Injector, computed, effect, signal, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { v4 as uuid } from 'uuid';
@@ -54,6 +54,7 @@ export class AppComponent {
 
   // Counter
   value = signal<number>(0);
+  increment = signal<number>(1);
   isPrime = computed<boolean>(() => this.isNumberPrime(this.value()));
   whenClickedAddOneNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click add 1 button the number ${this.value() + 1} it will be prime.` : '');
   whenClickedMultiplyTwoNumberIsPrime = computed(() => this.isNumberPrime(this.value() + 1) ? `If you click multiply 2 button the number ${this.value() + 1} it will be prime.` : '');
@@ -105,8 +106,10 @@ export class AppComponent {
 
     this.myEffect = effect((onCleanup) => {
       const value = this.value();
+      const increment = untracked(this.increment);
       const task = setTimeout(() => {
-        this.logger.log(value);
+        const event = `${value} (+${increment})`;
+        this.logger.log(event);
       }, 500);
       onCleanup(() => {
         clearTimeout(task);
@@ -123,7 +126,11 @@ export class AppComponent {
   }
 
   add() {
-    this.value.update((currentValue) => currentValue + 1);
+    this.value.update((currentValue) => currentValue + this.increment());
+  }
+
+  increase() {
+    this.increment.update((currentValue) => currentValue + 1);
   }
 
   multiply() {

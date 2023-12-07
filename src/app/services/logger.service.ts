@@ -7,8 +7,8 @@ export class LoggerService {
 
   logs: string[] = [];
 
-  log(value: number) {
-    this.logs.push(`${new Date().toLocaleTimeString()}: log  ${value}`);
+  log(message: string) {
+    this.logs.push(`${new Date().toLocaleTimeString()}: log  ${message}`);
   }
 
   getLogs() {
